@@ -38,6 +38,21 @@ Notes:
 - The app blocks non-HTTPS origins except `localhost`.
 - Ensure your browser allows requests to https://platform.zone01.gr.
 
+### Use local CORS proxy (when API CORS is broken)
+
+Run the proxy and static server together (requires Node):
+
+```powershell
+npm install
+npm run dev
+```
+
+This will start:
+- Proxy on http://localhost:8787 forwarding /api/auth/signin and /api/graphql
+- Static server on http://localhost:5173
+
+The frontend will automatically target the proxy when running on localhost.
+
 ## Deploy
 
 ### GitHub Pages

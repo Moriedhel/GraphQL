@@ -31,7 +31,11 @@ export function mountLoginView(root, onSuccess) {
       await signIn(login, password, remember);
       onSuccess?.();
     } catch (ex) {
-      err.textContent = 'Invalid credentials or network error.';
+      if (ex && ex.message === 'CORS_OR_NETWORK') {
+        err.textContent = 'Login request was blocked by the browser (CORS or network). If you are testing on a deployed domain, this indicates the API CORS headers are misconfigured. Try running locally on http://localhost or contact the platform admin to fix CORS.';
+      } else {
+        err.textContent = 'Invalid credentials or network error.';
+      }
     }
     btn.disabled = false;
   });

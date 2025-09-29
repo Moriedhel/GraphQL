@@ -2,8 +2,7 @@
 // Uses AbortController and proper error propagation
 
 import { getToken } from './auth.js';
-
-const GQL_ENDPOINT = 'https://platform.zone01.gr/api/graphql-engine/v1/graphql';
+import { GQL_ENDPOINT } from './config.js';
 
 export async function fetchGraphQL(query, variables = {}, { signal } = {}) {
   const token = getToken();

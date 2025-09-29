@@ -37,16 +37,27 @@ export function parseJwt(token) {
 export async function signIn(loginOrEmail, password, remember = false) {
   // Basic auth with base64(login:password)
   const credentials = btoa(`${loginOrEmail}:${password}`);
-  const res = await fetch('https://platform.zone01.gr/api/auth/signin', {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${credentials}`,
-    },
-  });
+  let res;
+  try {
+    const { AUTH_ENDPOINT } = await import('./config.js');
+    res = await fetch(AUTH_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${credentials}`,
+      },
+    });
+  } catch (networkErr) {
+    const e = new Error('CORS_OR_NETWORK');
+    e.cause = networkErr;
+    throw e;
+  }
 
   if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(errText || 'Invalid credentials');
+    let errText = '';
+    try { errText = await res.text(); } catch {}
+    const e = new Error(errText || 'Invalid credentials');
+    e.status = res.status;
+    throw e;
   }
 
   const token = await res.text();

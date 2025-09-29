@@ -1,0 +1,14 @@
+{
+  "name": "zone01-graphql-profile",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "http-server . -p 5173",
+    "proxy": "node proxy-server.js",
+    "dev": "concurrently \"npm:proxy\" \"npm:serve\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "http-server": "^14.1.1"
+  }
+}
