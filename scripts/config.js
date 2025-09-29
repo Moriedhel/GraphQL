@@ -23,3 +23,10 @@ export const GQL_ENDPOINT = USE_LOCAL_PROXY
   : USE_REMOTE_PROXY
     ? `${REMOTE_PROXY_BASE}/api/graphql`
     : 'https://platform.zone01.gr/api/graphql-engine/v1/graphql';
+
+export const PROXY_INFO = {
+  isLocalhost: IS_LOCALHOST,
+  remoteProxyBase: REMOTE_PROXY_BASE,
+  usingLocalProxy: USE_LOCAL_PROXY,
+  usingRemoteProxy: USE_REMOTE_PROXY,
+};

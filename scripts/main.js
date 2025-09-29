@@ -1,4 +1,5 @@
 import { getToken, signOut } from './auth.js';
+import { PROXY_INFO } from './config.js';
 import { mountLoginView } from './ui/loginView.js';
 import { mountProfileView } from './ui/profileView.js';
 
@@ -14,6 +15,14 @@ async function start() {
   ensureHttpsOrLocalhost();
 
   const app = document.getElementById('app');
+  // If not localhost and no remote proxy configured, warn the user
+  if (!PROXY_INFO.isLocalhost && !PROXY_INFO.usingRemoteProxy) {
+    const warn = document.createElement('div');
+    warn.className = 'card error';
+    warn.style.marginBottom = '1rem';
+    warn.textContent = 'CORS may block requests on this deployed site. If you see login failures, set REMOTE_PROXY_BASE in scripts/config.js to a deployed proxy (e.g., Cloudflare Workers).';
+    app.before(warn);
+  }
   const render = () => {
     app.innerHTML = '';
     if (!getToken()) {
