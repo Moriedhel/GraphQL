@@ -104,6 +104,22 @@ export async function signIn(loginOrEmail, password, remember = false) {
     const e = new Error('INVALID_JWT_RESPONSE');
     throw e;
   }
+  // Ensure it base64url decodes (parseJwt returns null on failure)
+  const payload = parseJwt(token);
+  if (!payload) {
+    // try URL-decoding then re-parse once
+    try {
+      const dec = decodeURIComponent(token);
+      if (jwtRe.test(dec) && parseJwt(dec)) {
+        token = dec;
+      } else {
+        throw new Error('INVALID_JWT_RESPONSE');
+      }
+    } catch {
+      const e = new Error('INVALID_JWT_RESPONSE');
+      throw e;
+    }
+  }
 
   setToken(token, remember);
   return token;
