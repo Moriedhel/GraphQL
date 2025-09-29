@@ -67,6 +67,17 @@ The frontend will automatically target the proxy when running on localhost.
 2. Publish directory is the repo root.
 3. Deploy; the site URL will be HTTPS automatically.
 
+### Remote CORS proxy (Cloudflare Workers)
+
+If the Zone01 API CORS headers are invalid on your deployed domain, deploy a small proxy:
+
+1. Create a new Worker and paste `proxy-cloudflare-worker.js`.
+2. Deploy and note the URL, e.g., `https://your-proxy.workers.dev`.
+3. Edit `scripts/config.js` and set `REMOTE_PROXY_BASE` to that URL.
+4. Commit and redeploy your static site (GitHub Pages/Netlify).
+
+The app will then call `${REMOTE_PROXY_BASE}/api/auth/signin` and `${REMOTE_PROXY_BASE}/api/graphql` instead of the platform directly, and the Worker will return correct CORS headers.
+
 ## Project structure
 
 - `index.html` — single-page shell, security meta tags, mounts the app
