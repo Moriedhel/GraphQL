@@ -6,7 +6,7 @@
 
 const IS_LOCALHOST = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 
-// Set this to your deployed proxy base (e.g., https://your-proxy.workers.dev)
+// Set this to your deployed proxy base (e.g., https://your-proxy.vercel.app or https://your-proxy.onrender.com)
 const REMOTE_PROXY_BASE = '';
 
 const USE_LOCAL_PROXY = IS_LOCALHOST;

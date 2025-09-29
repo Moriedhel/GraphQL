@@ -67,6 +67,14 @@ The frontend will automatically target the proxy when running on localhost.
 2. Publish directory is the repo root.
 3. Deploy; the site URL will be HTTPS automatically.
 
+If you want a hosted proxy without Cloudflare Workers, use Netlify Functions (included):
+
+1. Keep `netlify.toml` and the `netlify/functions/*-proxy.js` files committed.
+2. Deploy to Netlify (connect repo). Netlify will host the functions at `/.netlify/functions/*`.
+3. The provided redirects map `/api/auth/signin` and `/api/graphql` to the functions.
+4. In `scripts/config.js`, set `REMOTE_PROXY_BASE` to your site origin (e.g., `https://your-site.netlify.app`).
+5. Redeploy; the frontend will call `https://your-site.netlify.app/api/...` which routes to the functions and then to the Zone01 API with corrected CORS.
+
 ### Remote CORS proxy (Cloudflare Workers)
 
 If the Zone01 API CORS headers are invalid on your deployed domain, deploy a small proxy:
