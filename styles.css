@@ -1,0 +1,91 @@
+:root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --primary: #4f46e5; /* indigo */
+    --primary-contrast: #ffffff;
+    --pass: #22c55e;
+    --fail: #ef4444;
+    color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0b1020;
+        --card: #141a2e;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --primary: #14b8a6; /* teal */
+        --primary-contrast: #051014;
+    }
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+}
+
+.site-header, .site-footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.container {
+    max-width: 960px;
+    margin: 24px auto;
+    background: var(--card);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0003;
+}
+
+h1, h2 { margin: 0 0 0.75rem; }
+
+form label { display: block; margin-top: 0.75rem; }
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.6rem 0.7rem;
+    margin-top: 0.3rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+}
+input:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.remember { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; }
+
+button {
+    display: inline-block;
+    padding: 0.7rem 1rem;
+    margin-top: 1rem;
+    background: var(--primary);
+    color: var(--primary-contrast);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+button:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.error { color: var(--fail); margin-top: 0.5rem; }
+.success { color: var(--pass); margin-top: 0.5rem; }
+
+.card { background: var(--card); border: 1px solid #e5e7eb22; padding: 1rem; border-radius: 12px; }
+.card ul { list-style: none; padding: 0; margin: 0; }
+.card li { padding: 0.25rem 0; }
+
+.chart { margin-top: 1rem; overflow: auto; }
+
+.spinner { width: 24px; height: 24px; border: 3px solid #e5e7eb; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
