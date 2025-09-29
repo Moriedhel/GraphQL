@@ -2,7 +2,7 @@
 // Uses AbortController and proper error propagation
 
 import { getToken } from './auth.js';
-import { GQL_ENDPOINT } from './config.js';
+import { GQL_ENDPOINT, PROXY_INFO } from './config.js';
 
 export async function fetchGraphQL(query, variables = {}, { signal } = {}) {
   const token = getToken();
@@ -13,6 +13,7 @@ export async function fetchGraphQL(query, variables = {}, { signal } = {}) {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
+      ...(PROXY_INFO.usingPublicProxy ? { 'x-cors-headers': 'authorization,content-type' } : {}),
     },
     body: JSON.stringify({ query, variables }),
     signal,

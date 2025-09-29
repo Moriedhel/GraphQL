@@ -123,6 +123,12 @@ export async function mountProfileView(root, abortController) {
     const err = document.createElement('p');
     err.className = 'error';
     err.textContent = `Failed to load profile: ${ex.message || ex}`;
+    if (ex.message && ex.message.includes('Not authenticated')) {
+      err.textContent += ' (token missing)';
+    }
+    if (ex.message === 'INVALID_JWT_RESPONSE') {
+      err.textContent = 'Login succeeded but the token response was not a valid JWT. This can happen with public CORS proxies. Please use a trusted proxy (Vercel/Render) or try again.';
+    }
     root.appendChild(err);
   }
 }

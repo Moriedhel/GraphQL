@@ -34,17 +34,29 @@ export function parseJwt(token) {
   }
 }
 
+function base64Utf8(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin);
+}
+
 export async function signIn(loginOrEmail, password, remember = false) {
-  // Basic auth with base64(login:password)
-  const credentials = btoa(`${loginOrEmail}:${password}`);
+  // Basic auth with UTF-8 safe base64(login:password)
+  const credentials = base64Utf8(`${loginOrEmail}:${password}`);
   let res;
   try {
-    const { AUTH_ENDPOINT } = await import('./config.js');
+    const { AUTH_ENDPOINT, PROXY_INFO } = await import('./config.js');
+    const headers = {
+      Authorization: `Basic ${credentials}`,
+      'Content-Type': 'text/plain',
+    };
+    if (PROXY_INFO.usingPublicProxy) {
+      headers['x-cors-headers'] = 'authorization,content-type';
+    }
     res = await fetch(AUTH_ENDPOINT, {
       method: 'POST',
-      headers: {
-        Authorization: `Basic ${credentials}`,
-      },
+      headers,
     });
   } catch (networkErr) {
     const e = new Error('CORS_OR_NETWORK');
@@ -60,7 +72,39 @@ export async function signIn(loginOrEmail, password, remember = false) {
     throw e;
   }
 
-  const token = await res.text();
+  let raw = await res.text();
+  let token = raw.trim();
+
+  // Some proxies may wrap the token in quotes or JSON; try to extract a JWT
+  const jwtRe = /([A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+)/;
+
+  // If the entire response is a quoted string
+  if ((token.startsWith('"') && token.endsWith('"')) || (token.startsWith("'") && token.endsWith("'"))) {
+    try { token = JSON.parse(token); } catch {}
+  }
+
+  // If it's JSON object, try to find a JWT in values
+  if (token.startsWith('{') && token.endsWith('}')) {
+    try {
+      const obj = JSON.parse(token);
+      for (const v of Object.values(obj)) {
+        if (typeof v === 'string' && jwtRe.test(v)) { token = v; break; }
+      }
+    } catch {}
+  }
+
+  // If still not a JWT, attempt regex match within the text
+  if (!jwtRe.test(token)) {
+    const m = raw.match(jwtRe);
+    if (m) token = m[1];
+  }
+
+  // Final validation
+  if (!jwtRe.test(token)) {
+    const e = new Error('INVALID_JWT_RESPONSE');
+    throw e;
+  }
+
   setToken(token, remember);
   return token;
 }
