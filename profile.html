@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - GraphQL Profile</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="profile-container">
+        <header class="profile-header">
+            <h1>User Profile</h1>
+            <div class="user-info">
+                <span id="user-name">Loading...</span>
+                <button id="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <main class="profile-content">
+            <!-- Three Information Sections -->
+            <section class="info-section" id="basic-info">
+                <h2>Basic Information</h2>
+                <div id="basic-info-content">Loading...</div>
+            </section>
+
+            <section class="info-section" id="xp-info">
+                <h2>XP Progress</h2>
+                <div id="xp-info-content">Loading...</div>
+            </section>
+
+            <section class="info-section" id="audit-info">
+                <h2>Audit Statistics</h2>
+                <div id="audit-info-content">Loading...</div>
+            </section>
+
+            <!-- Statistics Section with Graphs -->
+            <section class="statistics-section">
+                <h2>Data Visualizations</h2>
+                <div class="graphs-container">
+                    <div class="graph-item">
+                        <h3>XP Progress Over Time</h3>
+                        <div id="xp-chart" class="chart-container"></div>
+                    </div>
+                    <div class="graph-item">
+                        <h3>Project Success Rate</h3>
+                        <div id="success-chart" class="chart-container"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Load scripts in dependency order: config -> auth -> graphql -> graphs -> profile -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/graphql.js"></script>
+    <script src="js/graphs.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
